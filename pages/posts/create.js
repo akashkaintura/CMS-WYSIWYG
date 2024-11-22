@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Container, TextField, Button, Typography } from '@mui/material';
 import WYSIWYGEditor from '../../components/WYSIWYGEditor';
+import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState([]);
-    const router = useRouter();
+    const [content, setContent] = useState();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/posts', { title, content: JSON.stringify(content) });
-            if (response.status === 201) {
-                router.push('/posts');
-            }
+            await axios.post('/api/posts', {
+                title,
+                content: JSON.stringify(content),
+            });
+            alert('Post created successfully!');
         } catch (error) {
             console.error('Failed to create post:', error);
         }

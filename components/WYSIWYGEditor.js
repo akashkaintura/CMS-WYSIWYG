@@ -1,14 +1,25 @@
-import React, { useMemo, useState } from "react";
-import { createEditor } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
+import React, { useMemo, useState } from 'react';
+import { createEditor, Node } from 'slate';
+import { Slate, Editable, withReact } from 'slate-react';
 
 const WYSIWYGEditor = ({ value, onChange }) => {
     const editor = useMemo(() => withReact(createEditor()), []);
-    const [content, setContent] = useState(value || [
-        { type: "paragraph", children: [{ text: "Start editing..." }] },
-    ]);
+
+    const defaultValue = [
+        {
+            type: 'paragraph',
+            children: [{ text: 'Start editing...' }],
+        },
+    ];
+
+    const [content, setContent] = useState(() =>
+        Node.isNodeList(value) ? value : defaultValue
+    );
+    console.log('Editor initial value:', value || defaultValue);
+
 
     const handleChange = (newValue) => {
+
         setContent(newValue);
         if (onChange) {
             onChange(newValue);
@@ -17,7 +28,7 @@ const WYSIWYGEditor = ({ value, onChange }) => {
 
     return (
         <Slate editor={editor} value={content} onChange={handleChange}>
-            <Editable placeholder="Enter some text..." />
+            <Editable placeholder="Type your content here..." />
         </Slate>
     );
 };
